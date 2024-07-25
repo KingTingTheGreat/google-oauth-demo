@@ -1,9 +1,11 @@
 import {
   CLIENT_ID,
   CLIENT_SECRET,
+  FAILURE_MESSAGE,
   REDIRECT_URI,
   STATE_LENGTH,
 } from "@/constants";
+import { generateSessionId } from "@/util/generateSessionId";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -29,9 +31,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { code } = body;
-  if (!body.code) {
-    return NextResponse.json({ status: 400 });
-  }
+  if (!body.code) return NextResponse.json(FAILURE_MESSAGE);
 
   const queryParams = new URLSearchParams({
     grant_type: "authorization_code",
@@ -50,10 +50,15 @@ export async function POST(req: NextRequest) {
 
   const data = await res.json();
 
-  const access_token = data.access_token;
-  const refresh_token = data.refresh_token;
-  const expires = data.expires_in;
-  console.log(data);
+  const { access_token, refresh_token, expires_in } = data;
+  console.log("data", data);
 
-  return NextResponse.json({ message: "all good" });
+  if (data.error || !access_token || !expires_in) {
+    return NextResponse.json(FAILURE_MESSAGE);
+  }
+
+  const sessionId = generateSessionId();
+  console.log("created sessionId", sessionId);
+
+  return NextResponse.json({ sessionId });
 }

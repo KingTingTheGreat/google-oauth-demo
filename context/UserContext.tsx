@@ -34,9 +34,19 @@ export const UserContextProvider = ({
     setState(newState);
   };
 
-  const save = () => {
+  const save = (newChanges: Partial<UserContextState>) => {
     // could also use cookies
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    try {
+      console.log("saving");
+      const newState = {
+        ...state,
+        ...newChanges,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
+      setState(newState);
+    } catch {
+      return;
+    }
   };
 
   return (
@@ -57,7 +67,7 @@ export const useUserContext = (): UserContextType => {
 export type UserContextType = {
   state: UserContextState;
   set: (newChanges: Partial<UserContextState>) => void;
-  save: () => void;
+  save: (state: Partial<UserContextState>) => void;
 };
 
 export type UserContextState = {

@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/context/UserContext";
-import { TOKEN } from "@/constants";
+import { FAILURE_MESSAGE } from "@/constants";
 
 export default function GoogleCallback() {
   const userContext = useUserContext();
@@ -13,20 +13,31 @@ export default function GoogleCallback() {
   const state = searchParams.get("state");
 
   useEffect(() => {
-    const localState = localStorage.getItem(TOKEN);
+    const localState = userContext.state.state;
     if (localState !== state) {
       router.push("/");
     }
     const fetchSessionId = async () => {
-      const res = await fetch(`/api/oauth-token`, {
-        method: "POST",
-        body: JSON.stringify({ code }),
-      });
-      const { sessionId } = await res.json();
-      userContext.set({ sessionId });
+      try {
+        const res = await fetch(`/api/oauth-token`, {
+          method: "POST",
+          body: JSON.stringify({ code }),
+        });
+        const data = await res.json();
+
+        if (data === FAILURE_MESSAGE || !data.sessionId) {
+          console.log("failure", data);
+          router.push("/");
+        }
+        console.log("sessionId", data.sessionId);
+
+        userContext.save({ sessionId: data.sessionId });
+      } catch {
+        router.push("/");
+      }
     };
     fetchSessionId();
-  });
+  }, []);
 
   return (
     <div>
