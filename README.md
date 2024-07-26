@@ -9,5 +9,5 @@ You must define the following variables:
 - **GOOGLE_CLIENT_ID**
 - **GOOGLE_CLIENT_SECRET**
 - **MONGO_URI**
-- **DB_NAME**
+- **OAUTH_DB_NAME**
 - **USERS_COLLECTION**

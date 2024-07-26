@@ -35,3 +35,7 @@ export const readCookie = () => {
 
   return storedCookieData
 }
+
+export const clearCookie = () => {
+  Cookies.set(COOKIE_NAME, JSON.stringify({}))
+}

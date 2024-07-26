@@ -76,13 +76,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(FAILURE_MESSAGE)
   }
 
-  const userCollection = await getCollection('users')
-  await userCollection.insertOne({
+  const newEntry = {
     sessionId,
     name,
     email,
     access_token,
-  })
+  }
+
+  const userCollection = await getCollection('users')
+  console.log('updating db')
+  const dbRes = await userCollection.findOneAndUpdate(
+    { name, email },
+    { $set: newEntry },
+  )
+  if (!dbRes) {
+    await userCollection.insertOne(newEntry)
+  }
 
   return NextResponse.json({ sessionId })
 }
