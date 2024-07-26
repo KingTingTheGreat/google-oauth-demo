@@ -1,21 +1,9 @@
-import {
-  COOKIE_NAME,
-  FAILURE_MESSAGE,
-  SUCCESS_MESSAGE,
-  USERS_COLLECTION,
-} from '@/constants'
+import { FAILURE_MESSAGE, SUCCESS_MESSAGE, USERS_COLLECTION } from '@/constants'
 import { NextRequest, NextResponse } from 'next/server'
 import getCollection from '@/db'
 
 export async function POST(req: NextRequest) {
-  const cookie = req.cookies.get(COOKIE_NAME)
-
-  if (!cookie) {
-    console.log('no cookie present')
-    return NextResponse.json({ message: FAILURE_MESSAGE })
-  }
-
-  const { sessionId } = JSON.parse(cookie.value)
+  const { sessionId } = await req.json()
 
   if (!sessionId) {
     console.log('no session id')
