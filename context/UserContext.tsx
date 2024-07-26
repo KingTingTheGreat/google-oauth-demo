@@ -1,76 +1,75 @@
-import { createContext, useContext, useState } from "react";
+import { readCookie, updateCookie } from '@/lib/cookie'
+import { createContext, useContext, useState } from 'react'
 
-const STORAGE_KEY = "my-test";
+const STORAGE_KEY = 'my-test'
 
 const getCurrentState = (): UserContextState | null => {
   try {
-    const stringData = localStorage.getItem(STORAGE_KEY);
-    const parsedData = JSON.parse(stringData as string) as UserContextState;
-    return parsedData;
+    return readCookie()
   } catch {
-    return null;
+    return null
   }
-};
+}
 
 const defaultState: UserContextState = {
-  sessionId: "",
-  state: "",
-};
+  sessionId: '',
+  state: '',
+}
 
-const UserContext = createContext<UserContextType | null>(null);
+const UserContext = createContext<UserContextType | null>(null)
 
 export const UserContextProvider = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) => {
-  const [state, setState] = useState(getCurrentState() || defaultState);
+  const [state, setState] = useState(getCurrentState() || defaultState)
 
   const set = (newChanges: Partial<UserContextState>) => {
     const newState = {
       ...state,
       ...newChanges,
-    };
-    setState(newState);
-  };
+    }
+    setState(newState)
+  }
 
   const save = (newChanges: Partial<UserContextState>) => {
     // could also use cookies
     try {
-      console.log("saving");
+      console.log('saving')
       const newState = {
         ...state,
         ...newChanges,
-      };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
-      setState(newState);
+      }
+      updateCookie(newState)
+      setState(newState)
     } catch {
-      return;
+      return
     }
-  };
+  }
 
   return (
     <UserContext.Provider value={{ state, set, save }}>
       {children}
     </UserContext.Provider>
-  );
-};
+  )
+}
 
 export const useUserContext = (): UserContextType => {
-  const context = useContext(UserContext);
+  const context = useContext(UserContext)
   if (!context) {
-    throw new Error("useUserContext must be used with a UserContextProvider");
+    throw new Error('useUserContext must be used with a UserContextProvider')
   }
-  return context;
-};
+  return context
+}
 
 export type UserContextType = {
-  state: UserContextState;
-  set: (newChanges: Partial<UserContextState>) => void;
-  save: (state: Partial<UserContextState>) => void;
-};
+  state: UserContextState
+  set: (newChanges: Partial<UserContextState>) => void
+  save: (state: Partial<UserContextState>) => void
+}
 
 export type UserContextState = {
-  sessionId: string;
-  state: string;
-};
+  sessionId: string
+  state: string
+}
