@@ -12,7 +12,7 @@ export default function ProfilePage() {
     const fetchUser = async () => {
       const userInfo = await getUserInfo(userContext.state.sessionId);
       console.log(userInfo);
-      setUser(await getUserInfo(userContext.state.sessionId));
+      setUser(userInfo);
     };
     fetchUser();
   }, [userContext.state.sessionId]);
