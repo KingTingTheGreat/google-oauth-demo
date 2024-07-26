@@ -1,4 +1,4 @@
-export const REDIRECT_URI = 'http://localhost:3000/callback';
+export const REDIRECT_URI = 'https://google-oauth-demo-wine.vercel.app/callback';
 export const CSRF_TOKEN_LENGTH = 16;
 export const SESSION_ID_LENGTH = 64;
 export const SUCCESS_MESSAGE = 'success';
