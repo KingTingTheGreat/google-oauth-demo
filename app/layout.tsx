@@ -1,27 +1,38 @@
-'use client'
-import { UserContextProvider } from '@/context/UserContext'
-import { clearCookie } from '@/lib/cookie'
-import Link from 'next/link'
+'use client';
+import Footer from '@/components/footer';
+import Header from '@/components/header';
+import { UserContextProvider } from '@/context/UserContext';
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <UserContextProvider>
       <html lang="en">
-        <body>
-          <header>
-            <Link href="/">Home</Link>
-            <Link href="/auth/profile">Profile</Link>
-          </header>
-          {children}
-          <footer>
-            <button onClick={() => clearCookie()}>Sign Out</button>
-          </footer>
+        <body
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Header />
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'start',
+              alignItems: 'center',
+            }}
+          >
+            {children}
+          </div>
+          <Footer />
         </body>
       </html>
     </UserContextProvider>
-  )
+  );
 }

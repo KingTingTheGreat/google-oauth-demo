@@ -1,22 +1,26 @@
-import { FAILURE_MESSAGE, SUCCESS_MESSAGE, USERS_COLLECTION } from '@/constants'
-import { NextRequest, NextResponse } from 'next/server'
-import getCollection from '@/db'
+import {
+  FAILURE_MESSAGE,
+  SUCCESS_MESSAGE,
+  USERS_COLLECTION,
+} from '@/constants';
+import { NextRequest, NextResponse } from 'next/server';
+import getCollection from '@/db';
 
 export async function POST(req: NextRequest) {
-  const { sessionId } = await req.json()
+  const { sessionId } = await req.json();
 
   if (!sessionId) {
-    console.log('no session id')
-    return NextResponse.json({ message: FAILURE_MESSAGE })
+    console.log('no session id');
+    return NextResponse.json({ message: FAILURE_MESSAGE });
   }
 
-  const userCollection = await getCollection(USERS_COLLECTION)
-  const userDocument = await userCollection.findOne({ sessionId })
+  const userCollection = await getCollection(USERS_COLLECTION);
+  const userDocument = await userCollection.findOne({ sessionId });
 
   if (!userDocument) {
-    console.log('invalid session id')
-    return NextResponse.json({ message: FAILURE_MESSAGE })
+    console.log('invalid session id');
+    return NextResponse.json({ message: FAILURE_MESSAGE });
   }
 
-  return NextResponse.json({ message: SUCCESS_MESSAGE })
+  return NextResponse.json({ message: SUCCESS_MESSAGE });
 }

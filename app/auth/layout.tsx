@@ -6,5 +6,5 @@ export default function AuthLayout({
       <h2>Authorized Users Only</h2>
       {children}
     </>
-  )
+  );
 }

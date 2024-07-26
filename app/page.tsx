@@ -1,37 +1,32 @@
-"use client";
-import { STATE_LENGTH } from "@/constants";
-import { useUserContext } from "@/context/UserContext";
-import { useRouter } from "next/navigation";
+'use client';
+import { useUserContext } from '@/context/UserContext';
+import { generateCSRF } from '@/util/generateCSRF';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const router = useRouter();
   const userContext = useUserContext();
 
-  function makeid(length: number) {
-    let result = "";
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let counter = 0;
-    while (counter < length) {
-      result += characters.charAt(
-        Math.floor(Math.random() * characters.length)
-      );
-      counter += 1;
-    }
-    return result;
-  }
-
   const handleSubmit = async () => {
-    console.log("signing in");
-    const state = makeid(STATE_LENGTH);
-    userContext.save({ state });
-    const res = await fetch(`/api/oauth-token?state=${state}`);
+    console.log('signing in');
+    const csrfToken = generateCSRF();
+    userContext.save({ csrfToken: csrfToken });
+    const res = await fetch(`/api/oauth-token?state=${csrfToken}`);
     router.push(await res.json());
   };
 
   return (
     <div>
-      <button onClick={() => handleSubmit()}>Sign In</button>
+      <button
+        style={{
+          padding: '20px',
+          backgroundColor: 'lightblue',
+          borderRadius: '20px',
+        }}
+        onClick={() => handleSubmit()}
+      >
+        Sign In
+      </button>
     </div>
   );
 }

@@ -1,39 +1,40 @@
-"use client";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useUserContext } from "@/context/UserContext";
-import { FAILURE_MESSAGE } from "@/constants";
+'use client';
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useUserContext } from '@/context/UserContext';
+import { FAILURE_MESSAGE } from '@/constants';
 
 export default function GoogleCallback() {
   const userContext = useUserContext();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const code = searchParams.get("code");
-  const state = searchParams.get("state");
+  const code = searchParams.get('code');
+  const state = searchParams.get('state');
 
   useEffect(() => {
-    const localState = userContext.state.state;
+    const localState = userContext.state.csrfToken;
     if (localState !== state) {
-      router.push("/");
+      router.push('/');
     }
+
     const fetchSessionId = async () => {
       try {
         const res = await fetch(`/api/oauth-token`, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({ code }),
         });
         const data = await res.json();
 
         if (data === FAILURE_MESSAGE || !data.sessionId) {
-          console.log("failure", data);
-          router.push("/");
+          console.log('failure', data);
+          router.push('/');
         }
-        console.log("sessionId", data.sessionId);
+        console.log('sessionId', data.sessionId);
 
         userContext.save({ sessionId: data.sessionId });
       } catch {
-        router.push("/");
+        router.push('/');
       }
     };
     fetchSessionId();
