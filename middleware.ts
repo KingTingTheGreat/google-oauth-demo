@@ -1,4 +1,4 @@
-import type { NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from 'next/server'
 import { COOKIE_NAME, SUCCESS_MESSAGE } from './constants'
 
 export async function middleware(req: NextRequest) {
@@ -7,11 +7,17 @@ export async function middleware(req: NextRequest) {
 
     const cookie = req.cookies.get(COOKIE_NAME)
 
-    if (!cookie) return Response.redirect(new URL('/', req.url))
+    if (!cookie) {
+      console.log('no cookie')
+      return NextResponse.redirect(req.nextUrl.origin)
+    }
 
     const { sessionId } = JSON.parse(cookie.value)
 
-    if (!sessionId) return Response.redirect(new URL('/', req.url))
+    if (!sessionId) {
+      console.log('no session id')
+      return NextResponse.redirect(req.nextUrl.origin)
+    }
 
     const verifyUrl = req.nextUrl.origin + '/api/verify'
     const res = await fetch(verifyUrl, {
@@ -20,7 +26,10 @@ export async function middleware(req: NextRequest) {
     })
     const data = await res.json()
 
-    if (data.message !== SUCCESS_MESSAGE)
-      return Response.redirect(new URL('/', req.url))
+    if (data.message !== SUCCESS_MESSAGE) {
+      console.log('failed to verify sessionId')
+      return NextResponse.redirect(req.nextUrl.origin)
+    }
+    console.log('verified session id')
   }
 }
