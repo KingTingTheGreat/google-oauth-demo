@@ -8,6 +8,7 @@ const HeaderLink = ({ to, text }: { to: string; text: string }) => {
         backgroundColor: 'lightblue',
         color: 'black',
         textDecoration: 'none',
+        margin: '2px',
       }}
       href={to}
     >
@@ -21,8 +22,11 @@ const Header = () => {
     <header
       style={{ display: 'flex', justifyContent: 'space-between', margin: 10 }}
     >
-      <HeaderLink to="/" text="Home" />
-      <HeaderLink to="/auth/profile" text="Profile" />
+      <HeaderLink to="/" text="OAuth Demo" />
+      <div>
+        <HeaderLink to="/auth/dashboard" text="Dashboard" />
+        <HeaderLink to="/auth/profile" text="Profile" />
+      </div>
     </header>
   );
 };

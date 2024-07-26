@@ -1,8 +1,9 @@
 'use client';
-import { clearCookie } from '@/lib/cookie';
+import { useUserContext } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 
 const Footer = () => {
+  const userContext = useUserContext();
   const router = useRouter();
 
   return (
@@ -15,7 +16,7 @@ const Footer = () => {
           textAlign: 'center',
         }}
         onClick={() => {
-          clearCookie();
+          userContext.save({ sessionId: '' });
           router.push('/');
         }}
       >
