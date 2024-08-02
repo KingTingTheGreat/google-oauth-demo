@@ -90,14 +90,11 @@ export async function POST(req: NextRequest) {
 
   const userCollection = await getCollection(USERS_COLLECTION);
   console.log('updating db');
-  const dbRes = await userCollection.updateOne(
-    { name, email },
-    { $set: newEntry },
-  );
+  const dbRes = await userCollection.updateOne({ email }, { $set: newEntry });
   if (!dbRes.modifiedCount) {
     console.log('inserting new entry');
     await userCollection.insertOne(newEntry);
   }
 
-  return NextResponse.json({ sessionId });
+  return NextResponse.json({ sessionId, name, email });
 }

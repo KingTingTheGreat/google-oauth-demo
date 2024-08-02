@@ -13,6 +13,8 @@ const getCurrentState = (): UserContextState | null => {
 
 const defaultState: UserContextState = {
   sessionId: '',
+  email: '',
+  name: '',
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -70,4 +72,6 @@ export type UserContextType = {
 
 export type UserContextState = {
   sessionId: string;
+  email: string;
+  name: string;
 };

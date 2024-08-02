@@ -33,7 +33,11 @@ export default function GoogleCallback() {
         }
         console.log('sessionId', data.sessionId);
 
-        userContext.save({ sessionId: data.sessionId });
+        userContext.save({
+          sessionId: data.sessionId,
+          name: data.name,
+          email: data.email,
+        });
       } catch {
         router.push('/');
       }
