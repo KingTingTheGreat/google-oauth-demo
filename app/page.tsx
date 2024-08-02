@@ -1,6 +1,6 @@
 'use client';
 import { useUserContext } from '@/context/UserContext';
-import { generateCSRF } from '@/util/generateCSRF';
+import { generateCSRFToken, storeCSRFToken } from '@/hooks/csrfToken';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
@@ -8,10 +8,9 @@ export default function Home() {
   const userContext = useUserContext();
 
   const handleSubmit = async () => {
-    console.log('signing in');
-    const csrfToken = generateCSRF();
-    userContext.save({ csrfToken: csrfToken });
-    const res = await fetch(`/api/oauth-token?state=${csrfToken}`);
+    const csrfToken = generateCSRFToken();
+    storeCSRFToken(csrfToken);
+    const res = await fetch(`/api/oauth-token?csrfToken=${csrfToken}`);
     router.push(await res.json());
   };
 

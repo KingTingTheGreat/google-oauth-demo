@@ -10,8 +10,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import getCollection from '@/db';
 
 export async function GET(req: NextRequest) {
-  const state = req.nextUrl.searchParams.get('state');
-  if (!state || state.length !== CSRF_TOKEN_LENGTH) {
+  const csrfToken = req.nextUrl.searchParams.get('csrfToken');
+  if (!csrfToken || csrfToken.length !== CSRF_TOKEN_LENGTH) {
     return NextResponse.redirect('/');
   }
 
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
     response_type: 'code',
     access_type: 'offline',
-    state,
+    state: csrfToken,
     redirect_uri: REDIRECT_URI,
     client_id: CLIENT_ID,
   });

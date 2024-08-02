@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/context/UserContext';
 import { FAILURE_MESSAGE } from '@/constants';
+import { getCSRFToken } from '@/hooks/csrfToken';
 
 export default function GoogleCallback() {
   const userContext = useUserContext();
@@ -13,8 +14,8 @@ export default function GoogleCallback() {
   const state = searchParams.get('state');
 
   useEffect(() => {
-    const localState = userContext.state.csrfToken;
-    if (localState !== state) {
+    const localState = getCSRFToken();
+    if (!localState || localState !== state) {
       router.push('/');
     }
 

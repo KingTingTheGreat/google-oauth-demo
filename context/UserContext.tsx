@@ -13,7 +13,6 @@ const getCurrentState = (): UserContextState | null => {
 
 const defaultState: UserContextState = {
   sessionId: '',
-  csrfToken: '',
 };
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -71,5 +70,4 @@ export type UserContextType = {
 
 export type UserContextState = {
   sessionId: string;
-  csrfToken: string;
 };

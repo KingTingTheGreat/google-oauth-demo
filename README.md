@@ -11,3 +11,5 @@ You must define the following variables:
 - **MONGO_URI**
 - **OAUTH_DB_NAME**
 - **USERS_COLLECTION**
+- **ENV**
+  - ensure different values are used for development and production
