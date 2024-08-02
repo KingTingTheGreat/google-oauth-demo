@@ -1,5 +1,6 @@
 'use client';
 import { useUserContext } from '@/context/UserContext';
+import { clearCSRFToken } from '@/hooks/csrfToken';
 import { useRouter } from 'next/navigation';
 
 const Footer = () => {
@@ -16,7 +17,10 @@ const Footer = () => {
           textAlign: 'center',
         }}
         onClick={() => {
-          userContext.save({ sessionId: '' });
+          clearCSRFToken();
+          fetch('/api/logout', {
+            method: 'POST',
+          });
           router.push('/');
         }}
       >

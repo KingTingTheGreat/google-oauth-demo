@@ -12,5 +12,5 @@ export const COOKIE_NAME = 'google-oauth-demo';
 export const CLIENT_ID = process.env.GOOGLE_CLIENT_ID as string;
 export const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET as string;
 export const MONGO_URI = process.env.MONGO_URI as string;
-export const DB_NAME = (process.env.OAUTH_DB_NAME as string) + '-' + ENV;
+export const DB_NAME = (process.env.DB_NAME as string) + '-' + ENV;
 export const USERS_COLLECTION = process.env.USERS_COLLECTION as string;

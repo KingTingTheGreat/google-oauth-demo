@@ -4,6 +4,7 @@ import {
   FAILURE_MESSAGE,
   REDIRECT_URI,
   CSRF_TOKEN_LENGTH,
+  USERS_COLLECTION,
 } from '@/constants';
 import { generateSessionId } from '@/util/generateSessionId';
 import { NextRequest, NextResponse } from 'next/server';
@@ -33,7 +34,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { code } = body;
-  if (!body.code) return NextResponse.json(FAILURE_MESSAGE);
+  if (!code) return NextResponse.json(FAILURE_MESSAGE);
 
   const queryParams = new URLSearchParams({
     grant_type: 'authorization_code',
@@ -81,15 +82,20 @@ export async function POST(req: NextRequest) {
     name,
     email,
     access_token,
+    last_login: new Date().toISOString(),
+    sessionIdExpires: new Date(
+      Date.now() + parseInt(expires_in) * 1000,
+    ).toISOString(),
   };
 
-  const userCollection = await getCollection('users');
+  const userCollection = await getCollection(USERS_COLLECTION);
   console.log('updating db');
-  const dbRes = await userCollection.findOneAndUpdate(
+  const dbRes = await userCollection.updateOne(
     { name, email },
     { $set: newEntry },
   );
-  if (!dbRes) {
+  if (!dbRes.modifiedCount) {
+    console.log('inserting new entry');
     await userCollection.insertOne(newEntry);
   }
 
